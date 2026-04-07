@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample Norfolk Publication</title>
+    <meta name="description" content="This is a sample HTML document demonstrating the Norfolk publishing platform capabilities.">
+    <meta name="keywords" content="sample,demo,norfolk,publishing">
+</head>
+<body>
+    <h1>Sample Norfolk Publication</h1>
+    
+    <p>This is a sample HTML document demonstrating the Norfolk publishing platform capabilities. It includes proper metadata that will be automatically extracted by the publishing system.</p>
+    
+    <h2>Features Demonstrated</h2>
+    
+    <ul>
+        <li><strong>Title extraction</strong> from the &lt;title&gt; tag</li>
+        <li><strong>Description extraction</strong> from meta description</li>
+        <li><strong>Keywords extraction</strong> from meta keywords</li>
+        <li><strong>Automatic slug generation</strong> from the title</li>
+    </ul>
+    
+    <h2>Publishing Process</h2>
+    
+    <p>When you publish this file using the Norfolk publishing skill, it will:</p>
+    
+    <ol>
+        <li>Extract the title "Sample Norfolk Publication"</li>
+        <li>Generate the slug "sample-norfolk-publication"</li>
+        <li>Use the meta description as the page description</li>
+        <li>Extract tags from the keywords meta tag</li>
+        <li>Apply Norfolk AI Labs branding automatically</li>
+        <li>Deploy to share.norfolkailabs.com</li>
+    </ol>
+    
+    <h2>Usage Examples</h2>
+    
+    <p>You can publish this file using:</p>
+    
+    <pre><code># Minimal (all metadata auto-detected)
+python3 scripts/publish.py sample-content.html
+
+# With Atlas
+"Publish sample-content.html to Norfolk"
+
+# With custom parameters
+"Publish sample-content.html with title 'Custom Title' and tags 'demo,test'"</code></pre>
+    
+    <p>The published page will be available at <code>https://share.norfolkailabs.com/sample-norfolk-publication/</code> and listed on the homepage index.</p>
+</body>
+</html>
