@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Finance + Gemini Integration Tutorial | Norfolk AI Labs</title>
+    <meta name="description" content="Google Finance + Gemini Integration Tutorial - Norfolk AI Labs">
+    <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+    <header class="norfolk-header">
+        <h1>Norfolk AI Labs</h1>
+        <div class="subtitle"><a href="/" style="color: white; text-decoration: none;">Shared Content</a> → Google Finance + Gemini Integration Tutorial</div>
+    </header>
+
+    <main class="norfolk-content">
+        <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How Google Finance Is Integrated with Gemini</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; line-height: 1.65; color: #1f2937; max-width: 900px; margin: 40px auto; padding: 0 24px; background: #ffffff; }
+    h1, h2, h3 { color: #111827; line-height: 1.25; }
+    h1 { font-size: 2.2rem; margin-bottom: 0.4rem; }
+    h2 { font-size: 1.45rem; margin-top: 2.2rem; border-top: 1px solid #e5e7eb; padding-top: 1.1rem; }
+    h3 { font-size: 1.1rem; margin-top: 1.4rem; }
+    p, li { font-size: 1rem; }
+    .sub { color: #6b7280; margin-bottom: 1.6rem; }
+    .callout { background: #f3f4f6; border-left: 4px solid #4f46e5; padding: 14px 16px; margin: 18px 0; border-radius: 6px; }
+    .warn { background: #fff7ed; border-left-color: #ea580c; }
+    code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    pre { background: #111827; color: #f9fafb; padding: 14px; border-radius: 8px; overflow-x: auto; }
+    a { color: #2563eb; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    ul, ol { padding-left: 1.3rem; }
+    .sources li { margin-bottom: 0.45rem; }
+  </style>
+</head>
+<body>
+  <h1>How Google Finance Is Integrated with Gemini</h1>
+  <p class="sub">A practical tutorial on what the integration actually is, how it works, what is verified, and how to use it productively.</p>
+
+  <div class="callout">
+    <strong>Short version:</strong> Gemini is integrated with Google Finance in two distinct ways. First, Google Finance itself now uses Gemini-powered AI features such as Deep Search and AI-generated earnings insights. Second, Gemini as a model/platform can be connected to fresh web information via Google Search grounding and to Google Workspace tools that finance teams use. The important nuance: this is <em>not</em> the same thing as a public “Google Finance API inside Gemini” product.
+  </div>
+
+  <h2>1) What is actually integrated?</h2>
+  <p>Based on Google’s own product announcements, the clearest verified integration is this:</p>
+  <ul>
+    <li><strong>Google Finance now includes Gemini-powered AI features</strong>, especially <strong>Deep Search</strong> for complex financial questions.</li>
+    <li><strong>Google Finance earnings experiences</strong> include AI-generated “At a glance” summaries, plus live audio and real-time transcripts around earnings calls.</li>
+    <li><strong>Google Finance also mixes in other structured finance context</strong>, such as prediction market data from Kalshi and Polymarket.</li>
+  </ul>
+
+  <p>Separately, outside the Google Finance product itself:</p>
+  <ul>
+    <li><strong>Gemini API supports grounding with Google Search</strong>, which lets Gemini retrieve fresher web information rather than relying only on model training.</li>
+    <li><strong>Gemini in Workspace</strong> can help finance teams analyze data in Sheets, summarize docs, draft memos, and prepare presentations.</li>
+  </ul>
+
+  <div class="callout warn">
+    <strong>Important distinction:</strong> I did <em>not</em> find evidence of a general-purpose official product where Gemini has a native public Google Finance data API embedded into every Gemini interaction. What is verified is: (1) Google Finance uses Gemini features inside the product, and (2) Gemini can use Google Search grounding and Workspace integrations for finance workflows.
+  </div>
+
+  <h2>2) How the Google Finance + Gemini integration works conceptually</h2>
+  <p>The cleanest mental model is a 3-layer stack:</p>
+
+  <h3>Layer A — Product layer: Google Finance</h3>
+  <p>Google Finance is the user-facing product for market tracking, charts, watchlists, earnings, and related financial information.</p>
+
+  <h3>Layer B — Gemini reasoning layer</h3>
+  <p>Gemini is the reasoning engine that powers AI features inside Google Finance, especially when a user asks a more complex natural-language question.</p>
+
+  <h3>Layer C — Retrieval / grounding layer</h3>
+  <p>For Deep Search-style responses, Gemini does not rely purely on static training knowledge. Google says the system can issue many simultaneous searches, build a research plan, reason across multiple sources, and then generate a cited answer.</p>
+
+  <p>So the flow looks roughly like this:</p>
+  <pre>User asks a finance question
+→ Google Finance routes it to Gemini-powered AI features
+→ Gemini retrieves current information (via Google systems/search/indexed sources)
+→ Gemini reasons across multiple results
+→ Google Finance returns a cited response, often with links and follow-ups</pre>
+
+  <h2>3) The biggest new feature: Deep Search in Google Finance</h2>
+  <p>Google’s November 2025 blog post is the strongest direct source here.</p>
+  <p>What Google says Deep Search does:</p>
+  <ul>
+    <li>Handles <strong>complex finance questions</strong></li>
+    <li>Uses <strong>advanced Gemini models</strong></li>
+    <li>Can issue <strong>up to hundreds of simultaneous searches</strong></li>
+    <li>Produces a <strong>fully cited, comprehensive response</strong></li>
+    <li>Shows the <strong>research plan</strong> while generating</li>
+    <li>Supports <strong>follow-up questions</strong></li>
+  </ul>
+
+  <p>That makes it less like a simple chatbot answer and more like a mini research workflow wrapped into Google Finance.</p>
+
+  <h2>4) Earnings integration: where Gemini becomes genuinely useful</h2>
+  <p>Another concrete place the integration shows up is earnings tracking.</p>
+  <p>Google Finance now provides:</p>
+  <ul>
+    <li>An <strong>Upcoming earnings</strong> calendar</li>
+    <li><strong>Live audio streams</strong> for calls</li>
+    <li><strong>Real-time transcripts</strong></li>
+    <li><strong>AI-powered “At a glance” summaries</strong> before, during, and after calls</li>
+    <li>Historical comparison against prior financials and expectations</li>
+  </ul>
+
+  <p>This is a meaningful integration point because finance users often do not want raw transcript alone. They want help extracting the signal: what changed, what surprised, what management emphasized, and how it compares to expectations.</p>
+
+  <h2>5) What this does <em>not</em> mean</h2>
+  <ul>
+    <li>It does <strong>not</strong> mean Gemini is a licensed investment advisor.</li>
+    <li>It does <strong>not</strong> mean every Gemini answer automatically has live market data.</li>
+    <li>It does <strong>not</strong> mean developers have a simple official “Gemini + Google Finance” API product for all use cases.</li>
+    <li>It does <strong>not</strong> remove the need to verify price-sensitive or time-sensitive information.</li>
+  </ul>
+
+  <div class="callout warn">
+    <strong>Practical rule:</strong> Use Gemini-in-finance workflows as a research accelerator, not as a final authority for trades, valuation, or compliance-sensitive conclusions.
+  </div>
+
+  <h2>6) How developers should think about this</h2>
+  <p>If you are a developer, the most realistic takeaway is:</p>
+  <ol>
+    <li>You can build Gemini-powered finance workflows using <strong>Gemini + Google Search grounding</strong>.</li>
+    <li>You can use <strong>Workspace + Gemini</strong> for analyst and operations workflows.</li>
+    <li>You should not assume a dedicated official Google Finance backend is available just because Google Finance the product uses Gemini internally.</li>
+  </ol>
+
+  <h3>Developer pattern #1 — finance research assistant</h3>
+  <p>Use Gemini with search grounding to answer questions like:</p>
+  <ul>
+    <li>“Summarize the latest earnings reaction for Company X.”</li>
+    <li>“Compare the market narrative around Nvidia, AMD, and Broadcom over the last two weeks.”</li>
+    <li>“What are the main arguments for and against this stock after its guidance revision?”</li>
+  </ul>
+
+  <h3>Developer pattern #2 — document workflow</h3>
+  <p>Use Gemini in Docs/Sheets/Slides to:</p>
+  <ul>
+    <li>summarize research notes,</li>
+    <li>draft investment memos,</li>
+    <li>prepare earnings recap decks,</li>
+    <li>build spreadsheet formulas and pivots.</li>
+  </ul>
+
+  <h3>Developer pattern #3 — human-in-the-loop market workflow</h3>
+  <p>A strong design is:</p>
+  <pre>fresh data source → Gemini synthesis → human review → final decision</pre>
+  <p>That is usually better than pretending the model itself is the data source.</p>
+
+  <h2>7) Example user workflows</h2>
+
+  <h3>Workflow A — Retail investor research</h3>
+  <ol>
+    <li>Open Google Finance beta.</li>
+    <li>Ask a question such as: <code>How has the thesis on Broadcom changed since the last earnings report?</code></li>
+    <li>Use Deep Search for a more comprehensive answer.</li>
+    <li>Review cited sources.</li>
+    <li>Open the linked materials and validate the core claims yourself.</li>
+  </ol>
+
+  <h3>Workflow B — Earnings prep</h3>
+  <ol>
+    <li>Track a ticker in Google Finance.</li>
+    <li>Use the Earnings tab to monitor the upcoming call.</li>
+    <li>Review live transcript and AI summary.</li>
+    <li>Export notes into Docs or Sheets.</li>
+    <li>Use Gemini to draft a short internal memo: expectations, surprises, management tone, open questions.</li>
+  </ol>
+
+  <h3>Workflow C — Finance team using Workspace</h3>
+  <ol>
+    <li>Pull raw internal or market-related data into Sheets.</li>
+    <li>Use Gemini to organize, summarize, pivot, and explain trends.</li>
+    <li>Draft an executive summary in Docs.</li>
+    <li>Create a Slides presentation with the key conclusions.</li>
+  </ol>
+
+  <h2>8) Best practices</h2>
+  <ul>
+    <li><strong>Ask comparative questions, not just factual ones.</strong> Gemini is more useful when synthesizing across inputs than when replacing a quote feed.</li>
+    <li><strong>Favor cited answers.</strong> If there are no citations, confidence should drop.</li>
+    <li><strong>Separate analysis from execution.</strong> Research can be AI-assisted; trading decisions should still go through explicit review.</li>
+    <li><strong>Use Gemini for summarization, framing, and synthesis.</strong> Use dedicated market data tools for exact pricing and trading workflows.</li>
+    <li><strong>Watch for latency and freshness issues.</strong> “AI-powered” does not always mean tick-level real time.</li>
+  </ul>
+
+  <h2>9) Bottom line</h2>
+  <p>Google Finance is no longer just a market-tracking interface with charts and news. It is becoming a research surface where Gemini helps users ask natural-language finance questions, run deeper multi-source searches, and digest earnings information faster.</p>
+
+  <p>The most accurate way to say it is:</p>
+  <div class="callout">
+    <strong>Google Finance is integrating Gemini-powered reasoning and research features.</strong> Meanwhile, Gemini as a broader platform can support finance workflows through Google Search grounding and Workspace integrations. But that is different from saying there is a universal public “Google Finance inside Gemini” API product.
+  </div>
+
+  <h2>10) Verified sources</h2>
+  <ul class="sources">
+    <li><a href="https://blog.google/products-and-platforms/products/search/new-google-finance-ai-deep-search/">Google Blog — Google Finance adds AI features for research, earnings and more</a></li>
+    <li><a href="https://workspace.google.com/solutions/ai/finance/">Google Workspace — AI for Finance</a></li>
+    <li><a href="https://developers.googleblog.com/en/gemini-api-and-ai-studio-now-offer-grounding-with-google-search/">Google Developers Blog — Gemini API and AI Studio offer grounding with Google Search</a></li>
+  </ul>
+
+  <p class="sub">Prepared for Ray. Tutorial emphasizes verified product behavior and explicitly distinguishes verified facts from inference.</p>
+</body>
+</html>
+    </main>
+
+    <footer class="norfolk-footer">
+        <p>© 2026 Norfolk AI Labs • Generated by <a href="https://github.com/openclaw/openclaw">Atlas</a> • <a href="https://github.com/norfolkailabs/share-pages">Source</a></p>
+    </footer>
+</body>
+</html>
