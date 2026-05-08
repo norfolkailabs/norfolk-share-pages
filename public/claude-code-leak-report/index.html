@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Leak Report | Norfolk AI Labs</title>
+    <meta name="description" content="Claude Leak Report - Norfolk AI Labs">
+    <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+    <header class="norfolk-header">
+        <h1>Norfolk AI Labs</h1>
+        <div class="subtitle"><a href="/" style="color: white; text-decoration: none;">Shared Content</a> → Claude Leak Report</div>
+    </header>
+
+    <main class="norfolk-content">
+        <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Claude Code Leak: Lessons for AI Agent Engineering</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-emerald: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-red: #ef4444;
+            --gradient-blue: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            --gradient-cyan: linear-gradient(135deg, #06b6d4, #0891b2);
+            --gradient-emerald: linear-gradient(135deg, #10b981, #059669);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        /* Background gradient animation */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at top, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                        radial-gradient(ellipse at bottom, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Floating Table of Contents */
+        .toc {
+            position: fixed;
+            left: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+            max-width: 220px;
+            transition: all 0.3s ease;
+        }
+
+        .toc h3 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .toc ul {
+            list-style: none;
+        }
+
+        .toc li {
+            margin-bottom: 0.5rem;
+        }
+
+        .toc a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            display: block;
+            padding: 0.25rem 0;
+            border-left: 2px solid transparent;
+            padding-left: 0.5rem;
+        }
+
+        .toc a:hover, .toc a.active {
+            color: var(--accent-cyan);
+            border-left-color: var(--accent-cyan);
+            transform: translateX(4px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem 0 280px;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                padding: 0 2rem;
+            }
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, 
+                rgba(59, 130, 246, 0.1) 0%, 
+                transparent 25%, 
+                transparent 75%, 
+                rgba(6, 182, 212, 0.1) 100%);
+            animation: rotate 20s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hero-content h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: var(--gradient-blue);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+        }
+
+        .hero-content .subtitle {
+            font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-weight: 400;
+        }
+
+        .hero-content .date {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-cyan);
+            font-size: 1rem;
+            font-weight: 500;
+            opacity: 0.8;
+        }
+
+        /* Section Styling */
+        .section {
+            padding: 5rem 0;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 3rem;
+            text-align: center;
+            background: var(--gradient-cyan);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* What Happened Section */
+        .timeline {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .timeline-item {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent-red);
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(239, 68, 68, 0.05) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .timeline-item:hover {
+            transform: translateX(8px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        /* Discovery Cards */
+        .discoveries-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .discovery-card {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(51, 65, 85, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .discovery-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-blue);
+        }
+
+        .discovery-card:nth-child(2)::before { background: var(--gradient-cyan); }
+        .discovery-card:nth-child(3)::before { background: var(--gradient-emerald); }
+        .discovery-card:nth-child(4)::before { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .discovery-card:nth-child(5)::before { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .discovery-card:nth-child(6)::before { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        .discovery-card:nth-child(7)::before { background: linear-gradient(135deg, #ec4899, #db2777); }
+        .discovery-card:nth-child(8)::before { background: linear-gradient(135deg, #06b6d4, #0891b2); }
+
+        .discovery-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .discovery-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .discovery-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .discovery-card li {
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .discovery-card li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--accent-cyan);
+            font-weight: bold;
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            margin-top: 3rem;
+        }
+
+        .comparison-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .comparison-table th {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-weight: 600;
+            padding: 1.5rem;
+            text-align: left;
+            font-size: 1.1rem;
+        }
+
+        .comparison-table td {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(51, 65, 85, 0.3);
+            color: var(--text-secondary);
+            vertical-align: top;
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(51, 65, 85, 0.2);
+        }
+
+        .comparison-table td:first-child {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--accent-cyan);
+            font-weight: 500;
+        }
+
+        .comparison-table td:last-child {
+            color: var(--accent-emerald);
+            font-weight: 500;
+        }
+
+        /* Fun Facts */
+        .fun-facts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .fun-fact {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(51, 65, 85, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .fun-fact::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .fun-fact:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .fun-fact .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .fun-fact h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .fun-fact p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Animated Counter */
+        .counter {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Sources */
+        .sources {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 3rem;
+            border-left: 4px solid var(--accent-emerald);
+        }
+
+        .sources h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--accent-emerald);
+        }
+
+        .sources ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .sources li {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .sources li::before {
+            content: '📚';
+            position: absolute;
+            left: 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .toc {
+                display: none;
+            }
+            
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .discoveries-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .discovery-card {
+                padding: 1.5rem;
+            }
+            
+            .comparison-table th,
+            .comparison-table td {
+                padding: 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .section {
+                padding: 3rem 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .comparison-table {
+                overflow-x: auto;
+            }
+            
+            .fun-facts {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Table of Contents -->
+    <nav class="toc">
+        <h3>Contents</h3>
+        <ul>
+            <li><a href="#hero">Hero</a></li>
+            <li><a href="#what-happened">What Happened</a></li>
+            <li><a href="#discoveries">Key Discoveries</a></li>
+            <li><a href="#lessons">Lessons Learned</a></li>
+            <li><a href="#fun-facts">Fun Facts</a></li>
+            <li><a href="#sources">Sources</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>The Claude Code Leak: Lessons for AI Agent Engineering</h1>
+                <p class="subtitle">What 512,000 lines of leaked TypeScript revealed about building production AI agents</p>
+                <p class="date">March 31, 2026</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- What Happened Section -->
+    <section id="what-happened" class="section">
+        <div class="container">
+            <h2 class="section-title">What Happened</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <p>Anthropic accidentally shipped a .map sourcemap file in a Claude Code npm update</p>
+                </div>
+                <div class="timeline-item">
+                    <p><span class="counter" data-count="600000">0</span> lines of TypeScript exposed within minutes</p>
+                </div>
+                <div class="timeline-item">
+                    <p>Mirrored, analyzed, ported to Python (claw-code repo hit <span class="counter" data-count="75000">0</span> stars in hours)</p>
+                </div>
+                <div class="timeline-item">
+                    <p>Second Anthropic data mishap in weeks (model spec leak days prior)</p>
+                </div>
+                <div class="timeline-item">
+                    <p>Boris Cherny confirmed: plain developer error, not tooling bug</p>
+                </div>
+                <div class="timeline-item">
+                    <p>Bun bug (oven-sh/bun#28001) may have caused it - source maps served in production</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Architectural Discoveries -->
+    <section id="discoveries" class="section">
+        <div class="container">
+            <h2 class="section-title">Key Architectural Discoveries</h2>
+            <div class="discoveries-grid">
+                <div class="discovery-card">
+                    <h3>The Agent Harness Pattern</h3>
+                    <ul>
+                        <li>The moat isn't the model - it's the harness (tools, memory, orchestration)</li>
+                        <li>Drop DeepSeek or Gemini into the same harness and you may get improved coding ability</li>
+                        <li>Live repo context loading every turn, dedicated Grep/Glob tools, LSP access</li>
+                        <li>5 context compaction strategies, <span class="counter" data-count="25">0</span>+ event hooks</li>
+                        <li>3 subagent execution models</li>
+                    </ul>
+                </div>
+                
+                <div class="discovery-card">
+                    <h3>Three-Layer Memory System</h3>
+                    <ul>
+                        <li>Index layer (always loaded): ~150 chars per line, just pointers</li>
+                        <li>Topic files (loaded on demand): actual knowledge</li>
+                        <li>Transcripts (never read, only grep'd): never loaded into context</li>
+                        <li>Write discipline: write topic file first, then update index</li>
+                        <li>If a fact can be re-derived from the codebase, don't store it</li>
+                        <li>autoDream: background memory consolidation between sessions</li>
+                    </ul>
+                </div>
+                
+                <div class="discovery-card">
+                    <h3>Prompt Cache Economics</h3>
+                    <ul>
+                        <li>SYSTEM_PROMPT_DYNAMIC_BOUNDARY splits static vs dynamic prompt</li>
+                        <li>Static front half cached and reused across sessions</li>
+                        <li>DANGEROUS_uncachedSystemPromptSection marks cache-breaking changes</li>
+                        <li><span class="counter" data-count="14">0</span> cache-break vectors tracked</li>
+                        <li>"Sticky latches" prevent mode toggles from busting cache</li>
+                        <li>Forked subagents inherit parent context as byte-identical copies (5 agents cost ~1)</li>
+                    </ul>
+                </div>
+                
+                <div class="discovery-card">
+                    <h3>KAIROS: Unreleased Autonomous Agent</h3>
+                    <ul>
+                        <li>Background 24/7 agent (similar to OpenClaw)</li>
+                        <li>Heartbeat prompt: "anything worth doing right now?"</li>
+                        <li>3 exclusive tools: push notifications, file delivery, PR subscriptions</li>
+                        <li>Append-only daily logs, cannot erase own history</li>
+                        <li>autoDream: nightly memory distillation and consolidation</li>
+                        <li>Separation of initiative from execution</li>
+                    </ul>
+                </div>
+                
+                <div class="discovery-card">
+                    <h3>Anti-Distillation Defenses</h3>
+                    <ul>
+                        <li>Fake tool injection to poison training data of copycats</li>
+                        <li>Connector-text summarization with cryptographic signatures</li>
+                        <li>Both bypassed in ~1 hour by determined actors</li>
+                        <li>Real protection is legal, not technical</li>
+                    </ul>
+                </div>
+                
+                <div class="discovery-card">
+                    <h3>Security Architecture</h3>
+                    <ul>
+                        <li><span class="counter" data-count="23">0</span> numbered security checks on every bash command</li>
+                        <li>Defense against: Zsh builtins, equals expansion, unicode zero-width spaces, IFS null-byte injection</li>
+                        <li>Native client attestation via Zig (below JS runtime)</li>
+                        <li>DRM for API calls</li>
+                        <li>Permission classification via side-query ("critic" pattern)</li>
+                        <li>Frustration detection via regex (cheaper than LLM inference for sentiment)</li>
+                    </ul>
+                </div>
+                
+                <div class="discovery-card">
+                    <h3>Multi-Agent Orchestration</h3>
+                    <ul>
+                        <li>Coordinator algorithm is a PROMPT, not code</li>
+                        <li>Instructions like "Do not rubber-stamp weak work"</li>
+                        <li>"You must understand findings before directing follow-up work"</li>
+                        <li>Three models: fork, teammate, worktree</li>
+                        <li>Fork inherits parent context as byte-identical copy for cache efficiency</li>
+                    </ul>
+                </div>
+                
+                <div class="discovery-card">
+                    <h3>Context Compaction</h3>
+                    <ul>
+                        <li>MicroCompact: local cleanup</li>
+                        <li>AutoCompact: near-limit summarization with circuit breaker</li>
+                        <li>Full Compact: emergency compression with selective re-injection</li>
+                        <li>MAX_CONSECUTIVE_AUTOCOMPACT_FAILURES = 3</li>
+                        <li>Fixed <span class="counter" data-count="250000">0</span> wasted API calls/day</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lessons for Our Stack -->
+    <section id="lessons" class="section">
+        <div class="container">
+            <h2 class="section-title">Lessons for Our Stack</h2>
+            <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">Apply to OpenClaw/Atlas</p>
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Claude Code Pattern</th>
+                            <th>Our Current State</th>
+                            <th>Action Item</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>3-layer memory (index → topic → transcript)</td>
+                            <td>Flat MEMORY.md + daily notes</td>
+                            <td>Consider index/topic split for faster retrieval</td>
+                        </tr>
+                        <tr>
+                            <td>Prompt cache boundary</td>
+                            <td>Not explicitly managed</td>
+                            <td>Audit system prompt for static/dynamic split</td>
+                        </tr>
+                        <tr>
+                            <td>autoDream consolidation</td>
+                            <td>Manual weekly hygiene</td>
+                            <td>Automate memory consolidation via cron</td>
+                        </tr>
+                        <tr>
+                            <td>Coordinator as prompt</td>
+                            <td>Sub-agent delegation via AGENTS.md</td>
+                            <td>Formalize coordinator prompts for sub-agents</td>
+                        </tr>
+                        <tr>
+                            <td>Critic pattern for security</td>
+                            <td>Allowlist-based exec security</td>
+                            <td>Evaluate side-query permission model</td>
+                        </tr>
+                        <tr>
+                            <td>Forked subagent context inheritance</td>
+                            <td>Each subagent starts fresh</td>
+                            <td>Investigate context sharing for related sub-agents</td>
+                        </tr>
+                        <tr>
+                            <td>Magic Docs (self-updating)</td>
+                            <td>Manual docs</td>
+                            <td>Implement idle-time doc refresh agents</td>
+                        </tr>
+                        <tr>
+                            <td>250K API call waste fix</td>
+                            <td>Unknown waste</td>
+                            <td>Add compaction failure circuit breakers</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fun Facts -->
+    <section id="fun-facts" class="section">
+        <div class="container">
+            <h2 class="section-title">Fun Facts</h2>
+            <div class="fun-facts">
+                <div class="fun-fact">
+                    <div class="icon">📄</div>
+                    <h4>Monster Function</h4>
+                    <p>print.ts: <span class="counter" data-count="5594">0</span> lines, single function of <span class="counter" data-count="3167">0</span> lines, 12 nesting levels deep</p>
+                </div>
+                
+                <div class="fun-fact">
+                    <div class="icon">⏳</div>
+                    <h4>Spinner Variety</h4>
+                    <p><span class="counter" data-count="187">0</span> unique spinner verbs for loading states</p>
+                </div>
+                
+                <div class="fun-fact">
+                    <div class="icon">🎮</div>
+                    <h4>April Fools Tamagotchi</h4>
+                    <p><span class="counter" data-count="18">0</span> species, rarity tiers, <span class="counter" data-count="1">0</span>% shiny rate, RPG stats</p>
+                </div>
+                
+                <div class="fun-fact">
+                    <div class="icon">🔍</div>
+                    <h4>Stealth Mode</h4>
+                    <p>Species names encoded with String.fromCharCode() to dodge grep</p>
+                </div>
+                
+                <div class="fun-fact">
+                    <div class="icon">🕵️</div>
+                    <h4>Undercover Mode</h4>
+                    <p>One-way door, no force-OFF, strips all Anthropic references</p>
+                </div>
+                
+                <div class="fun-fact">
+                    <div class="icon">🤖</div>
+                    <h4>AI-First Documentation</h4>
+                    <p>LLM-oriented code comments written for AI agents, not human readers</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sources -->
+    <section id="sources" class="section">
+        <div class="container">
+            <div class="sources">
+                <h3>Sources</h3>
+                <ul>
+                    <li>Engineer's Codex deep dive</li>
+                    <li>alex000kim analysis</li>
+                    <li>claw-code repo (instructkr)</li>
+                    <li>VentureBeat, Guardian, Forbes, Axios coverage</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Animated counter functionality
+        function animateCounter(element) {
+            const target = parseInt(element.getAttribute('data-count'));
+            const duration = 2000;
+            const step = target / (duration / 16);
+            let current = 0;
+            
+            const timer = setInterval(() => {
+                current += step;
+                if (current >= target) {
+                    element.textContent = target.toLocaleString();
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current).toLocaleString();
+                }
+            }, 16);
+        }
+
+        // Intersection Observer for counter animation
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
+                    entry.target.classList.add('animated');
+                    animateCounter(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        // Observe all counters
+        document.querySelectorAll('.counter').forEach(counter => {
+            counterObserver.observe(counter);
+        });
+
+        // Table of contents active link tracking
+        const sections = document.querySelectorAll('section[id]');
+        const tocLinks = document.querySelectorAll('.toc a');
+
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Remove active class from all links
+                    tocLinks.forEach(link => link.classList.remove('active'));
+                    
+                    // Add active class to current section's link
+                    const activeLink = document.querySelector(`.toc a[href="#${entry.target.id}"]`);
+                    if (activeLink) {
+                        activeLink.classList.add('active');
+                    }
+                }
+            });
+        }, { threshold: 0.3 });
+
+        // Observe all sections
+        sections.forEach(section => {
+            sectionObserver.observe(section);
+        });
+
+        // Smooth scrolling for TOC links
+        tocLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+    </main>
+
+    <footer class="norfolk-footer">
+        <p>© 2026 Norfolk AI Labs • Generated by <a href="https://github.com/openclaw/openclaw">Atlas</a> • <a href="https://github.com/norfolkailabs/share-pages">Source</a></p>
+    </footer>
+</body>
+</html>
