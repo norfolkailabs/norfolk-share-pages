@@ -14,6 +14,7 @@ import tempfile
 from datetime import datetime
 from pathlib import Path
 import re
+from html import escape
 
 # Configuration
 REPO_ROOT = Path(__file__).parent.parent
@@ -57,6 +58,13 @@ def extract_title_from_html(html_content):
     
     return "Untitled"
 
+def extract_meta_content(html_content, name):
+    """Extract a simple <meta name=... content=...> value from source HTML."""
+    pattern = rf"<meta[^>]*name=[\"']{re.escape(name)}[\"'][^>]*content=[\"']([^\"']*)[\"'][^>]*>"
+    match = re.search(pattern, html_content, re.IGNORECASE)
+    return match.group(1).strip() if match else ""
+
+
 def inject_branding(html_content, title, slug):
     """Inject Norfolk AI branding into HTML content"""
     
@@ -65,14 +73,20 @@ def inject_branding(html_content, title, slug):
         print(f"  Content already has Norfolk branding, using as-is")
         return html_content
     
+    robots = extract_meta_content(html_content, "robots")
+    keywords = extract_meta_content(html_content, "keywords")
+    meta_robots = f'\n    <meta name="robots" content="{escape(robots, quote=True)}">' if robots else ""
+    meta_keywords = f'\n    <meta name="keywords" content="{escape(keywords, quote=True)}">' if keywords else ""
+    safe_title = escape(title, quote=True)
+
     # Simple branding injection - wrap content in Norfolk template
     branded_html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{title} | Norfolk AI Labs</title>
-    <meta name="description" content="{title} - Norfolk AI Labs">
+    <title>{safe_title} | Norfolk AI Labs</title>
+    <meta name="description" content="{safe_title} - Norfolk AI Labs">{meta_robots}{meta_keywords}
     <link rel="stylesheet" href="/assets/style.css">
 </head>
 <body>
@@ -178,6 +192,8 @@ def main():
     parser.add_argument('--description', default='', help='Description for the content')
     parser.add_argument('--tags', help='Comma-separated tags')
     parser.add_argument('--no-push', action='store_true', help='Skip git push (for testing)')
+    parser.add_argument('--unlisted', action='store_true', help='Publish without adding to homepage index')
+    parser.add_argument('--overwrite', action='store_true', help='Overwrite an existing slug directory')
     
     args = parser.parse_args()
     
@@ -195,7 +211,10 @@ def main():
     
     # Check if slug already exists
     target_dir = PUBLIC_DIR / slug
-    if target_dir.exists():
+    if target_dir.exists() and not args.overwrite:
+        print(f"Error: Content with slug '{slug}' already exists. Use --overwrite to replace it.")
+        return 1
+    elif target_dir.exists():
         print(f"Warning: Content with slug '{slug}' already exists. Overwriting...")
     
     # Read HTML content
@@ -231,9 +250,12 @@ def main():
             f.write(branded_content)
         print(f"  Content written to {target_file}")
         
-        # Update index
-        print(f"  Updating homepage index...")
-        update_index(slug, title, args.description, tags)
+        # Update index unless explicitly publishing as direct-link-only/unlisted
+        if args.unlisted:
+            print(f"  Skipping homepage index update (unlisted)")
+        else:
+            print(f"  Updating homepage index...")
+            update_index(slug, title, args.description, tags)
         
         # Git operations
         if not args.no_push:

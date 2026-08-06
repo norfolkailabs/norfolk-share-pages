@@ -27,6 +27,12 @@ This repository powers `share.norfolkailabs.com` - a simple publishing platform 
   --title "Setup Guide" \
   --description "Complete setup instructions" \
   --tags "guide,setup,tutorial"
+
+# Direct-link-only/unlisted page (not added to homepage index)
+./scripts/publish.py guide.html \
+  --slug private-guide \
+  --title "Private Guide" \
+  --unlisted
 ```
 
 ### Publishing Workflow
@@ -43,6 +49,8 @@ This repository powers `share.norfolkailabs.com` - a simple publishing platform 
 - `--description` - Description for homepage listing
 - `--tags` - Comma-separated tags
 - `--no-push` - Create locally without git push (for testing)
+- `--unlisted` - Create/publish page without adding it to homepage index
+- `--overwrite` - Replace an existing slug directory
 
 ## Repository Structure
 
