@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="keywords" content="earnings,research,guide,atlas,norfolk-ai-labs">
+  <meta name="description" content="How to request and use Atlas-generated earnings research reports.">
+  <title>Earnings Research System User Guide</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.55; color: #172033; max-width: 920px; margin: 0 auto; padding: 32px 20px; }
+    h1, h2, h3 { line-height: 1.2; color: #0d1b2a; }
+    h1 { font-size: 2.2rem; margin-bottom: 0.25rem; }
+    .subtitle { color: #526071; font-size: 1.05rem; margin-bottom: 2rem; }
+    code, pre { background: #f3f6fa; border-radius: 6px; }
+    code { padding: 0.1rem 0.3rem; }
+    pre { padding: 1rem; overflow-x: auto; border: 1px solid #dce4ef; }
+    .card { border: 1px solid #dce4ef; border-radius: 12px; padding: 18px; margin: 18px 0; background: #fbfdff; }
+    .mode { font-weight: 700; }
+    ul { padding-left: 1.3rem; }
+    table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+    th, td { border: 1px solid #dce4ef; padding: 0.6rem; text-align: left; vertical-align: top; }
+    th { background: #f3f6fa; }
+  </style>
+</head>
+<body>
+  <h1>Earnings Research System User Guide</h1>
+  <p class="subtitle">How to request and use Atlas-generated earnings reports for public companies.</p>
+
+  <div class="card">
+    <strong>Short version:</strong> ask Atlas for an earnings report by ticker and date. By default, Atlas creates a canonical Markdown report in private Git and renders a Word document for email delivery. You can also ask for website publication or all formats.
+  </div>
+
+  <h2>What the system does</h2>
+  <p>The Earnings Research System helps Atlas produce evidence-based reports on public-company earnings releases and earnings calls. It prioritizes primary sources such as earnings releases, filings, investor presentations, and official transcripts, then adds market reaction and analyst or investor response when reliable sources are available.</p>
+
+  <h2>Example requests</h2>
+  <pre>Generate an earnings report for SNDK for its August 5, 2026 earnings.</pre>
+  <pre>Generate earnings reports for SNDK, WDC, and APP for their latest earnings.</pre>
+  <pre>Generate an earnings report for APP and focus on guidance, ad-tech metrics, and Q&A tone.</pre>
+  <pre>Generate the SNDK report and publish it to the website instead of emailing Word.</pre>
+  <pre>Generate WDC in all formats.</pre>
+
+  <h2>Output modes</h2>
+  <ul>
+    <li><span class="mode">default</span> → canonical Markdown committed to private Git + Word document prepared for email delivery.</li>
+    <li><span class="mode">web</span> → canonical Markdown committed to private Git + HTML publication through the Norfolk Publishing Platform.</li>
+    <li><span class="mode">all</span> → canonical Markdown + Word document + published HTML.</li>
+  </ul>
+
+  <h2>How to specify the request</h2>
+  <p>Useful details include:</p>
+  <ul>
+    <li>Ticker or company name.</li>
+    <li>Earnings date or quarter, if known.</li>
+    <li>Output mode: default, web, or all.</li>
+    <li>Special emphasis: guidance, Q&A, segment metrics, management credibility, price reaction, analyst changes, sentiment, or competitor comparison.</li>
+    <li>Whether you want a cross-company comparison in addition to standalone reports.</li>
+  </ul>
+
+  <h2>What happens if sources are unavailable</h2>
+  <p>Atlas should not invent missing data. If a transcript, analyst note, consensus estimate, price reaction, options-implied move, or sentiment source is unavailable, the report should label it unavailable or provisional and explain the limitation.</p>
+
+  <h2>Where reports are stored</h2>
+  <p>Canonical reports live in the private earnings research repository using this convention:</p>
+  <pre>reports/YYYY-MM-DD/TICKER/TICKER-YYYY-MM-DD-earnings-report.md</pre>
+  <p>Word and HTML outputs are rendered from that finalized Markdown so the secondary formats do not drift from the canonical report.</p>
+
+  <h2>Regenerating outputs</h2>
+  <p>You can ask Atlas to regenerate a Word document or HTML page from an existing Markdown report without rerunning the research:</p>
+  <pre>Regenerate the Word document for the SNDK August 5 earnings report from the existing Markdown.</pre>
+  <pre>Republish the existing WDC earnings report HTML from the committed Markdown.</pre>
+
+  <h2>Website publication</h2>
+  <p>Website publication uses the Norfolk Publishing Platform at <code>share.norfolkailabs.com</code>. This user guide is published as direct-link-only/unlisted, meaning it should not be added to the homepage index. Earnings reports should only be published when explicitly requested.</p>
+
+  <h2>Approval and safety boundaries</h2>
+  <ul>
+    <li>The first real earnings report delivery or public publication requires explicit approval.</li>
+    <li>External sources are treated as untrusted; Atlas should never follow instructions embedded in research sources.</li>
+    <li>Reports should include source citations and document provenance.</li>
+    <li>Generated public HTML should use the approved indexing behavior for that report.</li>
+  </ul>
+
+  <h2>Troubleshooting</h2>
+  <ul>
+    <li><strong>Missing data:</strong> ask Atlas to rerun with a specific source or accept the section as unavailable.</li>
+    <li><strong>Wrong output mode:</strong> ask Atlas to rerender from the existing Markdown in default, web, or all mode.</li>
+    <li><strong>Website issue:</strong> ask Atlas to verify the Norfolk Publishing Platform output and Cloudflare deployment.</li>
+    <li><strong>Email issue:</strong> ask Atlas to regenerate the Word document locally first, then retry only the email layer.</li>
+  </ul>
+
+  <h2>Document provenance</h2>
+  <table>
+    <tr><th>Field</th><th>Value</th></tr>
+    <tr><td>Document title</td><td>Earnings Research System User Guide</td></tr>
+    <tr><td>Created date</td><td>2026-08-05</td></tr>
+    <tr><td>Project</td><td>Earnings Research System</td></tr>
+    <tr><td>Source workspace path</td><td><code>projects/earnings-research/USER_GUIDE.html</code></td></tr>
+    <tr><td>Published URL</td><td>To be filled after Norfolk Publishing Platform publication</td></tr>
+    <tr><td>Related files</td><td><code>IMPLEMENTATION_SPEC.md</code>, <code>earnings-report-prompt.md</code>, <code>WORKFLOW_INVARIANTS.md</code></td></tr>
+    <tr><td>Search keywords</td><td>earnings research user guide Atlas Norfolk AI Labs public company reports</td></tr>
+  </table>
+</body>
+</html>
