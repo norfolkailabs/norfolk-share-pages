@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weighted Sentiment Look-Back Dashboard | Norfolk AI Labs</title>
+    <meta name="description" content="Weighted Sentiment Look-Back Dashboard - Norfolk AI Labs">
+    <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+    <header class="norfolk-header">
+        <h1>Norfolk AI Labs</h1>
+        <div class="subtitle"><a href="/" style="color: white; text-decoration: none;">Shared Content</a> → Weighted Sentiment Look-Back Dashboard</div>
+    </header>
+
+    <main class="norfolk-content">
+        <!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Weighted Sentiment Look-Back Dashboard</title>
+<style>
+:root { --bg:#08111f; --panel:#101a2b; --panel2:#0d1625; --line:#22314a; --text:#e5e7eb; --muted:#94a3b8; --blue:#3B82F6; --purple:#A855F7; --green:#22C55E; --orange:#F97316; --red:#EF4444; --yellow:#F59E0B; }
+* { box-sizing:border-box; }
+body { margin:0; background:radial-gradient(circle at 20% 0%, #172554 0, #08111f 36%, #050914 100%); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Arial,sans-serif; line-height:1.45; }
+a { color:#93c5fd; text-decoration:none; } a:hover { text-decoration:underline; }
+.wrap { max-width:1180px; margin:0 auto; padding:36px 22px 70px; }
+.hero { border:1px solid rgba(148,163,184,.22); background:linear-gradient(135deg, rgba(30,41,59,.94), rgba(15,23,42,.88)); border-radius:28px; padding:30px; box-shadow:0 24px 70px rgba(0,0,0,.28); }
+.eyebrow { color:#93c5fd; text-transform:uppercase; letter-spacing:.16em; font-size:12px; font-weight:700; }
+h1 { font-size:clamp(32px, 5vw, 58px); line-height:1.02; margin:10px 0 16px; }
+h2 { margin:42px 0 14px; font-size:30px; }
+h3 { margin:28px 0 12px; font-size:20px; }
+.lead { max-width:900px; color:#cbd5e1; font-size:18px; }
+.cards { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin-top:24px; }
+.card { background:rgba(15,23,42,.8); border:1px solid rgba(148,163,184,.18); border-radius:18px; padding:18px; }
+.card .label { color:var(--muted); font-size:13px; } .card .num { font-size:28px; font-weight:800; margin-top:5px; } .card .sub { color:#cbd5e1; font-size:13px; margin-top:5px; }
+.notice { border-left:4px solid var(--yellow); background:rgba(245,158,11,.11); padding:14px 16px; border-radius:14px; color:#fde68a; margin:18px 0; }
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:18px; align-items:start; }
+.panel { background:rgba(15,23,42,.78); border:1px solid rgba(148,163,184,.16); border-radius:22px; padding:20px; margin:18px 0; overflow:hidden; }
+.chart { margin:0; background:rgba(2,6,23,.35); border:1px solid rgba(148,163,184,.12); border-radius:18px; padding:14px; overflow-x:auto; }
+.chart figcaption { font-weight:800; margin:0 0 8px 4px; color:#e2e8f0; }
+svg { width:100%; min-width:620px; height:auto; }
+.grid { stroke:#243143; stroke-width:1; } .axis { fill:#94a3b8; font-size:12px; } .axis-line { stroke:#475569; stroke-width:1.2; stroke-dasharray:4 4; } .line { fill:none; stroke-width:3.4; stroke-linecap:round; stroke-linejoin:round; } .value { fill:#e5e7eb; font-size:12px; font-weight:700; } .missing { fill:#f59e0b; font-size:13px; font-weight:800; }
+.legend { display:flex; flex-wrap:wrap; gap:12px; color:#cbd5e1; font-size:13px; padding:10px 4px 0; } .legend i { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:6px; }
+table { width:100%; border-collapse:collapse; font-size:14px; overflow:hidden; border-radius:14px; } th,td { padding:10px 11px; border-bottom:1px solid rgba(148,163,184,.14); text-align:right; } th:first-child,td:first-child, th:nth-child(2),td:nth-child(2) { text-align:left; } th { color:#cbd5e1; background:rgba(30,41,59,.76); font-size:12px; text-transform:uppercase; letter-spacing:.06em; }
+.row-partial td { background:rgba(245,158,11,.07); } .row-failed td { background:rgba(239,68,68,.08); color:#fecaca; }
+.badge { display:inline-block; border-radius:999px; padding:3px 9px; font-size:12px; font-weight:800; } .badge.ok { background:rgba(34,197,94,.16); color:#86efac; } .badge.warn { background:rgba(245,158,11,.16); color:#fde68a; } .badge.bad { background:rgba(239,68,68,.18); color:#fecaca; }
+.driver { border:1px solid rgba(148,163,184,.15); background:rgba(2,6,23,.25); border-radius:16px; padding:12px 14px; margin:10px 0; } .driver summary { cursor:pointer; font-weight:800; }
+.post { border-radius:14px; padding:12px; margin:10px 0; background:rgba(15,23,42,.8); border:1px solid rgba(148,163,184,.12); } .post div { display:flex; flex-wrap:wrap; gap:8px; align-items:center; } .post span { color:#cbd5e1; } .post b { color:#f8fafc; } .post p { margin:8px 0; color:#dbeafe; } .post.bear p { color:#fee2e2; } h4.bull { color:#86efac; } h4.bear { color:#fca5a5; }
+.muted { color:var(--muted); } .small { font-size:13px; color:var(--muted); }
+.provenance { color:#cbd5e1; font-size:13px; }
+@media (max-width: 850px) { .cards,.grid2 { grid-template-columns:1fr; } .wrap { padding:22px 14px 50px; } .hero { padding:22px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <div class="eyebrow">Weighted Sentiment Signals · exploratory look-back</div>
+    <h1>Option 2 Delta vs Option 4 Impact Potential</h1>
+    <p class="lead">A visual dashboard for the five-window X.com look-back across memory and optical/photonics baskets. The goal is to compare descriptive sentiment deltas against a normalized impact-potential feature.</p>
+    <div class="notice"><strong>Important:</strong> this is exploratory. Historical X metrics are likely matured/current, not true point-in-time impressions. Optical windows 4–5 are incomplete because X API credits depleted.</div>
+    <div class="cards">
+      <div class="card"><div class="label">Memory coverage</div><div class="num">5 / 5</div><div class="sub">all windows complete</div></div>
+      <div class="card"><div class="label">Optical coverage</div><div class="num">3 / 5</div><div class="sub">1 partial · 1 failed</div></div>
+      <div class="card"><div class="label">Memory peak impact</div><div class="num">18.4</div><div class="sub">Jul 21–25</div></div>
+      <div class="card"><div class="label">Optical peak impact</div><div class="num">25.4</div><div class="sub">complete windows only · Jul 21–25</div></div>
+    </div>
+  </section>
+
+  <h2>Executive read-through</h2>
+  <section class="panel">
+    <ul>
+      <li><strong>Memory:</strong> Option 2 and Option 4 broadly agree. The strongest impact-potential window was <strong>Jul 21–25</strong>, matching the fear / possible-bottom window.</li>
+      <li><strong>Optical:</strong> completed windows show rising impact potential into <strong>Jul 21–25</strong>, but later windows need rerun because X credits depleted.</li>
+      <li><strong>Method takeaway:</strong> Option 2 answers “what changed?” Option 4 answers “what might have mattered?” Option 4 is more useful for stock-impact exploration, but also more assumption-heavy.</li>
+      <li><strong>Validation gap:</strong> forward return validation is still blocked until we have usable 2026 price data or a market-data file.</li>
+    </ul>
+  </section>
+
+  <h2>Signal charts</h2>
+  <div class="panel">
+    <figure class="chart"><figcaption>Core score comparison — hybrid, capped, impact</figcaption><svg viewBox="0 0 880 280" role="img" aria-label="Core score comparison — hybrid, capped, impact">
+<line class="grid" x1="54" x2="858" y1="232.0" y2="232.0"/>
+<text class="axis" x="44" y="236.0" text-anchor="end">-3.1</text>
+<line class="grid" x1="54" x2="858" y1="182.5" y2="182.5"/>
+<text class="axis" x="44" y="186.5" text-anchor="end">4.8</text>
+<line class="grid" x1="54" x2="858" y1="133.0" y2="133.0"/>
+<text class="axis" x="44" y="137.0" text-anchor="end">12.7</text>
+<line class="grid" x1="54" x2="858" y1="83.5" y2="83.5"/>
+<text class="axis" x="44" y="87.5" text-anchor="end">20.6</text>
+<line class="grid" x1="54" x2="858" y1="34.0" y2="34.0"/>
+<text class="axis" x="44" y="38.0" text-anchor="end">28.5</text>
+<text class="axis" x="54.0" y="262" text-anchor="middle">Jul 7–11</text>
+<text class="axis" x="255.0" y="262" text-anchor="middle">Jul 14–18</text>
+<text class="axis" x="456.0" y="262" text-anchor="middle">Jul 21–25</text>
+<text class="axis" x="657.0" y="262" text-anchor="middle">Jul 28–Aug 1</text>
+<text class="axis" x="858.0" y="262" text-anchor="middle">Aug 4–8</text>
+<line class="axis-line" x1="54" x2="858" y1="212.8" y2="212.8"/>
+<path class="line" d="M 54.0,166.0 L 255.0,127.6 L 456.0,53.2 L 657.0,129.8 L 858.0,71.7" stroke="#94A3B8"/>
+<circle cx="54.0" cy="166.0" r="4.5" fill="#94A3B8"><title>Memory / semiconductors Hybrid score: 7.5</title></circle>
+<circle cx="255.0" cy="127.6" r="4.5" fill="#94A3B8"><title>Memory / semiconductors Hybrid score: 13.6</title></circle>
+<circle cx="456.0" cy="53.2" r="4.5" fill="#94A3B8"><title>Memory / semiconductors Hybrid score: 25.4</title></circle>
+<circle cx="657.0" cy="129.8" r="4.5" fill="#94A3B8"><title>Memory / semiconductors Hybrid score: 13.2</title></circle>
+<circle cx="858.0" cy="71.7" r="4.5" fill="#94A3B8"><title>Memory / semiconductors Hybrid score: 22.5</title></circle>
+<path class="line" d="M 54.0,166.0 L 255.0,122.2 L 456.0,58.1 L 657.0,131.8 L 858.0,71.7" stroke="#22C55E"/>
+<circle cx="54.0" cy="166.0" r="4.5" fill="#22C55E"><title>Memory / semiconductors Capped score: 7.5</title></circle>
+<circle cx="255.0" cy="122.2" r="4.5" fill="#22C55E"><title>Memory / semiconductors Capped score: 14.4</title></circle>
+<circle cx="456.0" cy="58.1" r="4.5" fill="#22C55E"><title>Memory / semiconductors Capped score: 24.6</title></circle>
+<circle cx="657.0" cy="131.8" r="4.5" fill="#22C55E"><title>Memory / semiconductors Capped score: 12.9</title></circle>
+<circle cx="858.0" cy="71.7" r="4.5" fill="#22C55E"><title>Memory / semiconductors Capped score: 22.5</title></circle>
+<path class="line" d="M 54.0,178.0 L 255.0,145.4 L 456.0,97.0 L 657.0,154.2 L 858.0,108.8" stroke="#F97316"/>
+<circle cx="54.0" cy="178.0" r="4.5" fill="#F97316"><title>Memory / semiconductors Impact score: 5.6</title></circle>
+<circle cx="255.0" cy="145.4" r="4.5" fill="#F97316"><title>Memory / semiconductors Impact score: 10.7</title></circle>
+<circle cx="456.0" cy="97.0" r="4.5" fill="#F97316"><title>Memory / semiconductors Impact score: 18.4</title></circle>
+<circle cx="657.0" cy="154.2" r="4.5" fill="#F97316"><title>Memory / semiconductors Impact score: 9.3</title></circle>
+<circle cx="858.0" cy="108.8" r="4.5" fill="#F97316"><title>Memory / semiconductors Impact score: 16.6</title></circle>
+<path class="line" d="M 54.0,102.5 L 255.0,94.9 L 456.0,65.4 L 657.0,77.5" stroke="#94A3B8"/>
+<circle cx="54.0" cy="102.5" r="4.5" fill="#94A3B8"><title>Optical / photonics Hybrid score: 17.6</title></circle>
+<circle cx="255.0" cy="94.9" r="4.5" fill="#94A3B8"><title>Optical / photonics Hybrid score: 18.8</title></circle>
+<circle cx="456.0" cy="65.4" r="4.5" fill="#94A3B8"><title>Optical / photonics Hybrid score: 23.5</title></circle>
+<circle cx="657.0" cy="77.5" r="4.5" fill="#94A3B8"><title>Optical / photonics Hybrid score: 21.5</title></circle>
+<path class="line" d="M 54.0,102.5 L 255.0,93.8 L 456.0,61.4 L 657.0,74.6" stroke="#22C55E"/>
+<circle cx="54.0" cy="102.5" r="4.5" fill="#22C55E"><title>Optical / photonics Capped score: 17.6</title></circle>
+<circle cx="255.0" cy="93.8" r="4.5" fill="#22C55E"><title>Optical / photonics Capped score: 18.9</title></circle>
+<circle cx="456.0" cy="61.4" r="4.5" fill="#22C55E"><title>Optical / photonics Capped score: 24.1</title></circle>
+<circle cx="657.0" cy="74.6" r="4.5" fill="#22C55E"><title>Optical / photonics Capped score: 22.0</title></circle>
+<path class="line" d="M 54.0,83.7 L 255.0,69.7 L 456.0,53.3 L 657.0,74.7" stroke="#F97316"/>
+<circle cx="54.0" cy="83.7" r="4.5" fill="#F97316"><title>Optical / photonics Impact score: 20.6</title></circle>
+<circle cx="255.0" cy="69.7" r="4.5" fill="#F97316"><title>Optical / photonics Impact score: 22.8</title></circle>
+<circle cx="456.0" cy="53.3" r="4.5" fill="#F97316"><title>Optical / photonics Impact score: 25.4</title></circle>
+<circle cx="657.0" cy="74.7" r="4.5" fill="#F97316"><title>Optical / photonics Impact score: 22.0</title></circle>
+</svg>
+<div class="legend"><span><i style="background:#94A3B8"></i>Memory / semiconductors — Hybrid score</span> <span><i style="background:#22C55E"></i>Memory / semiconductors — Capped score</span> <span><i style="background:#F97316"></i>Memory / semiconductors — Impact score</span> <span><i style="background:#94A3B8"></i>Optical / photonics — Hybrid score</span> <span><i style="background:#22C55E"></i>Optical / photonics — Capped score</span> <span><i style="background:#F97316"></i>Optical / photonics — Impact score</span></div></figure>
+  </div>
+
+  <div class="grid2">
+    <div class="panel"><figure class="chart"><figcaption>Memory — Option 2 capped-score delta</figcaption><svg viewBox="0 0 880 275">
+<line class="grid" x1="54" x2="860" y1="227.0" y2="227.0"/>
+<text class="axis" x="44" y="231.0" text-anchor="end">-15.2</text>
+<line class="grid" x1="54" x2="860" y1="177.8" y2="177.8"/>
+<text class="axis" x="44" y="181.8" text-anchor="end">-8.0</text>
+<line class="grid" x1="54" x2="860" y1="128.5" y2="128.5"/>
+<text class="axis" x="44" y="132.5" text-anchor="end">-0.8</text>
+<line class="grid" x1="54" x2="860" y1="79.2" y2="79.2"/>
+<text class="axis" x="44" y="83.2" text-anchor="end">6.5</text>
+<line class="grid" x1="54" x2="860" y1="30.0" y2="30.0"/>
+<text class="axis" x="44" y="34.0" text-anchor="end">13.7</text>
+<line class="axis-line" x1="54" x2="860" y1="123.3" y2="123.3"/>
+<text class="axis" x="134.6" y="257" text-anchor="middle">Jul 7–11</text>
+<text class="missing" x="134.6" y="128.5" text-anchor="middle">n/a</text>
+<text class="axis" x="295.8" y="257" text-anchor="middle">Jul 14–18</text>
+<rect x="253.9" y="75.8" width="83.8" height="47.5" rx="5" fill="#10B981"><title>Jul 14–18: 7.0</title></rect>
+<text class="value" x="295.8" y="68.8" text-anchor="middle">7.0</text>
+<text class="axis" x="457.0" y="257" text-anchor="middle">Jul 21–25</text>
+<rect x="415.1" y="53.9" width="83.8" height="69.4" rx="5" fill="#10B981"><title>Jul 21–25: 10.2</title></rect>
+<text class="value" x="457.0" y="46.9" text-anchor="middle">10.2</text>
+<text class="axis" x="618.2" y="257" text-anchor="middle">Jul 28–Aug 1</text>
+<rect x="576.3" y="123.3" width="83.8" height="79.8" rx="5" fill="#EF4444"><title>Jul 28–Aug 1: -11.7</title></rect>
+<text class="value" x="618.2" y="219.1" text-anchor="middle">-11.7</text>
+<text class="axis" x="779.4" y="257" text-anchor="middle">Aug 4–8</text>
+<rect x="737.5" y="58.1" width="83.8" height="65.2" rx="5" fill="#10B981"><title>Aug 4–8: 9.6</title></rect>
+<text class="value" x="779.4" y="51.1" text-anchor="middle">9.6</text>
+</svg></figure></div>
+    <div class="panel"><figure class="chart"><figcaption>Optical — Option 2 capped-score delta</figcaption><svg viewBox="0 0 880 275">
+<line class="grid" x1="54" x2="860" y1="227.0" y2="227.0"/>
+<text class="axis" x="44" y="231.0" text-anchor="end">-3.3</text>
+<line class="grid" x1="54" x2="860" y1="177.8" y2="177.8"/>
+<text class="axis" x="44" y="181.8" text-anchor="end">-0.9</text>
+<line class="grid" x1="54" x2="860" y1="128.5" y2="128.5"/>
+<text class="axis" x="44" y="132.5" text-anchor="end">1.5</text>
+<line class="grid" x1="54" x2="860" y1="79.2" y2="79.2"/>
+<text class="axis" x="44" y="83.2" text-anchor="end">3.9</text>
+<line class="grid" x1="54" x2="860" y1="30.0" y2="30.0"/>
+<text class="axis" x="44" y="34.0" text-anchor="end">6.3</text>
+<line class="axis-line" x1="54" x2="860" y1="160.0" y2="160.0"/>
+<text class="axis" x="134.6" y="257" text-anchor="middle">Jul 7–11</text>
+<text class="missing" x="134.6" y="128.5" text-anchor="middle">n/a</text>
+<text class="axis" x="295.8" y="257" text-anchor="middle">Jul 14–18</text>
+<rect x="253.9" y="131.6" width="83.8" height="28.4" rx="5" fill="#10B981"><title>Jul 14–18: 1.4</title></rect>
+<text class="value" x="295.8" y="124.6" text-anchor="middle">1.4</text>
+<text class="axis" x="457.0" y="257" text-anchor="middle">Jul 21–25</text>
+<rect x="415.1" y="53.9" width="83.8" height="106.1" rx="5" fill="#10B981"><title>Jul 21–25: 5.2</title></rect>
+<text class="value" x="457.0" y="46.9" text-anchor="middle">5.2</text>
+<text class="axis" x="618.2" y="257" text-anchor="middle">Jul 28–Aug 1</text>
+<rect x="576.3" y="160.0" width="83.8" height="43.1" rx="5" fill="#EF4444"><title>Jul 28–Aug 1: -2.1</title></rect>
+<text class="value" x="618.2" y="219.1" text-anchor="middle">-2.1</text>
+<text class="axis" x="779.4" y="257" text-anchor="middle">Aug 4–8</text>
+<text class="missing" x="779.4" y="128.5" text-anchor="middle">n/a</text>
+</svg></figure></div>
+  </div>
+
+  <div class="grid2">
+    <div class="panel"><figure class="chart"><figcaption>Memory — historical impressions by window</figcaption><svg viewBox="0 0 880 250">
+<line class="grid" x1="62" x2="860" y1="204.0" y2="204.0"/>
+<text class="axis" x="52" y="208.0" text-anchor="end">0.0</text>
+<line class="grid" x1="62" x2="860" y1="160.0" y2="160.0"/>
+<text class="axis" x="52" y="164.0" text-anchor="end">572,475</text>
+<line class="grid" x1="62" x2="860" y1="116.0" y2="116.0"/>
+<text class="axis" x="52" y="120.0" text-anchor="end">1.1M</text>
+<line class="grid" x1="62" x2="860" y1="72.0" y2="72.0"/>
+<text class="axis" x="52" y="76.0" text-anchor="end">1.7M</text>
+<line class="grid" x1="62" x2="860" y1="28.0" y2="28.0"/>
+<text class="axis" x="52" y="32.0" text-anchor="end">2.3M</text>
+<text class="axis" x="141.8" y="234" text-anchor="middle">Jul 7–11</text>
+<rect x="103.5" y="140.7" width="76.6" height="63.3" rx="5" fill="#3B82F6"><title>Jul 7–11: 823,297 impressions</title></rect>
+<text class="axis" x="301.4" y="234" text-anchor="middle">Jul 14–18</text>
+<rect x="263.1" y="74.3" width="76.6" height="129.7" rx="5" fill="#3B82F6"><title>Jul 14–18: 1,687,904 impressions</title></rect>
+<text class="axis" x="461.0" y="234" text-anchor="middle">Jul 21–25</text>
+<rect x="422.7" y="51.0" width="76.6" height="153.0" rx="5" fill="#3B82F6"><title>Jul 21–25: 1,991,218 impressions</title></rect>
+<text class="axis" x="620.6" y="234" text-anchor="middle">Jul 28–Aug 1</text>
+<rect x="582.3" y="136.0" width="76.6" height="68.0" rx="5" fill="#3B82F6"><title>Jul 28–Aug 1: 884,137 impressions</title></rect>
+<text class="axis" x="780.2" y="234" text-anchor="middle">Aug 4–8</text>
+<rect x="741.9" y="149.2" width="76.6" height="54.8" rx="5" fill="#3B82F6"><title>Aug 4–8: 713,173 impressions</title></rect>
+</svg></figure></div>
+    <div class="panel"><figure class="chart"><figcaption>Optical — historical impressions by window</figcaption><svg viewBox="0 0 880 250">
+<line class="grid" x1="62" x2="860" y1="204.0" y2="204.0"/>
+<text class="axis" x="52" y="208.0" text-anchor="end">0.0</text>
+<line class="grid" x1="62" x2="860" y1="160.0" y2="160.0"/>
+<text class="axis" x="52" y="164.0" text-anchor="end">460,960</text>
+<line class="grid" x1="62" x2="860" y1="116.0" y2="116.0"/>
+<text class="axis" x="52" y="120.0" text-anchor="end">921,919</text>
+<line class="grid" x1="62" x2="860" y1="72.0" y2="72.0"/>
+<text class="axis" x="52" y="76.0" text-anchor="end">1.4M</text>
+<line class="grid" x1="62" x2="860" y1="28.0" y2="28.0"/>
+<text class="axis" x="52" y="32.0" text-anchor="end">1.8M</text>
+<text class="axis" x="141.8" y="234" text-anchor="middle">Jul 7–11</text>
+<rect x="103.5" y="129.0" width="76.6" height="75.0" rx="5" fill="#A855F7"><title>Jul 7–11: 786,245 impressions</title></rect>
+<text class="axis" x="301.4" y="234" text-anchor="middle">Jul 14–18</text>
+<rect x="263.1" y="51.0" width="76.6" height="153.0" rx="5" fill="#A855F7"><title>Jul 14–18: 1,603,338 impressions</title></rect>
+<text class="axis" x="461.0" y="234" text-anchor="middle">Jul 21–25</text>
+<rect x="422.7" y="86.5" width="76.6" height="117.5" rx="5" fill="#A855F7"><title>Jul 21–25: 1,231,068 impressions</title></rect>
+<text class="axis" x="620.6" y="234" text-anchor="middle">Jul 28–Aug 1</text>
+<rect x="582.3" y="126.9" width="76.6" height="77.1" rx="5" fill="#A855F7"><title>Jul 28–Aug 1: 807,817 impressions</title></rect>
+<text class="axis" x="780.2" y="234" text-anchor="middle">Aug 4–8</text>
+<text class="missing" x="780.2" y="116.0" text-anchor="middle">n/a</text>
+</svg></figure></div>
+  </div>
+
+  <h2>Data quality</h2>
+  <section class="panel">
+    <table><thead><tr><th>Basket</th><th>Window</th><th>Status</th><th>Notes</th></tr></thead><tbody>
+<tr><td>Memory / semiconductors</td><td>Jul 7–11</td><td><span class="badge ok">complete</span></td><td style="text-align:left">all expected queries returned</td></tr>
+<tr><td>Memory / semiconductors</td><td>Jul 14–18</td><td><span class="badge ok">complete</span></td><td style="text-align:left">all expected queries returned</td></tr>
+<tr><td>Memory / semiconductors</td><td>Jul 21–25</td><td><span class="badge ok">complete</span></td><td style="text-align:left">all expected queries returned</td></tr>
+<tr><td>Memory / semiconductors</td><td>Jul 28–Aug 1</td><td><span class="badge ok">complete</span></td><td style="text-align:left">all expected queries returned</td></tr>
+<tr><td>Memory / semiconductors</td><td>Aug 4–8</td><td><span class="badge ok">complete</span></td><td style="text-align:left">all expected queries returned</td></tr>
+<tr><td>Optical / photonics</td><td>Jul 7–11</td><td><span class="badge ok">complete</span></td><td style="text-align:left">all expected queries returned</td></tr>
+<tr><td>Optical / photonics</td><td>Jul 14–18</td><td><span class="badge ok">complete</span></td><td style="text-align:left">all expected queries returned</td></tr>
+<tr><td>Optical / photonics</td><td>Jul 21–25</td><td><span class="badge ok">complete</span></td><td style="text-align:left">all expected queries returned</td></tr>
+<tr><td>Optical / photonics</td><td>Jul 28–Aug 1</td><td><span class="badge warn">partial</span></td><td style="text-align:left">errored: axti, optical_terms</td></tr>
+<tr><td>Optical / photonics</td><td>Aug 4–8</td><td><span class="badge bad">failed</span></td><td style="text-align:left">errored: lite, cohr, aaoi, axti, optical_terms</td></tr>
+</tbody></table>
+  </section>
+
+  <h2>Tables</h2>
+  <div class="grid2">
+    <section class="panel"><h3>Memory</h3><table><thead><tr><th>Window</th><th>Status</th><th>Posts</th><th>Impr.</th><th>Hybrid</th><th>Capped</th><th>Δ capped</th><th>Impact</th><th>Quality</th></tr></thead><tbody>
+<tr class=""><td>Jul 7–11</td><td><span class="badge ok">complete</span></td><td>393</td><td>823,297</td><td>7.5</td><td>7.5</td><td>—</td><td>5.6</td><td>0.84</td></tr>
+<tr class=""><td>Jul 14–18</td><td><span class="badge ok">complete</span></td><td>405</td><td>1,687,904</td><td>13.6</td><td>14.4</td><td>7.0</td><td>10.7</td><td>0.79</td></tr>
+<tr class=""><td>Jul 21–25</td><td><span class="badge ok">complete</span></td><td>447</td><td>1,991,218</td><td>25.4</td><td>24.6</td><td>10.2</td><td>18.4</td><td>0.82</td></tr>
+<tr class=""><td>Jul 28–Aug 1</td><td><span class="badge ok">complete</span></td><td>416</td><td>884,137</td><td>13.2</td><td>12.9</td><td>-11.7</td><td>9.3</td><td>0.84</td></tr>
+<tr class=""><td>Aug 4–8</td><td><span class="badge ok">complete</span></td><td>439</td><td>713,173</td><td>22.5</td><td>22.5</td><td>9.6</td><td>16.6</td><td>0.86</td></tr>
+</tbody></table></section>
+    <section class="panel"><h3>Optical / photonics</h3><table><thead><tr><th>Window</th><th>Status</th><th>Posts</th><th>Impr.</th><th>Hybrid</th><th>Capped</th><th>Δ capped</th><th>Impact</th><th>Quality</th></tr></thead><tbody>
+<tr class=""><td>Jul 7–11</td><td><span class="badge ok">complete</span></td><td>379</td><td>786,245</td><td>17.6</td><td>17.6</td><td>—</td><td>20.6</td><td>0.87</td></tr>
+<tr class=""><td>Jul 14–18</td><td><span class="badge ok">complete</span></td><td>401</td><td>1,603,338</td><td>18.8</td><td>18.9</td><td>1.4</td><td>22.8</td><td>0.85</td></tr>
+<tr class=""><td>Jul 21–25</td><td><span class="badge ok">complete</span></td><td>404</td><td>1,231,068</td><td>23.5</td><td>24.1</td><td>5.2</td><td>25.4</td><td>0.74</td></tr>
+<tr class="row-partial"><td>Jul 28–Aug 1</td><td><span class="badge warn">partial</span></td><td>244</td><td>807,817</td><td>21.5</td><td>22.0</td><td>-2.1</td><td>22.0</td><td>0.82</td></tr>
+<tr class="row-failed"><td>Aug 4–8</td><td><span class="badge bad">failed</span></td><td colspan="7">X API credits depleted — no usable data</td></tr>
+</tbody></table></section>
+  </div>
+
+  <h2>Representative weighted drivers</h2>
+  <div class="grid2">
+    <section class="panel"><h3>Memory drivers</h3><details class="driver"><summary>Jul 7–11 — top drivers (complete)</summary>
+<h4 class="bull">Bullish</h4>
+<article class="post bull"><div><strong>@atelicinvest</strong> <span>mild_bullish</span> <b>weight 45,615</b></div><p>Investors: Man the memory cycle is really getting long in the tooth, these stocks look tired. The memory cycle: https://t.co/dozIc6JPrB https://t.co/IUN2jNNtFE</p><a href="https://x.com/atelicinvest/status/2075965289087586349">https://x.com/atelicinvest/status/2075965289087586349</a></article>
+<article class="post bull"><div><strong>@AnessHusseinAli</strong> <span>mild_bullish</span> <b>weight 34,131</b></div><p>Remember 1 year ago: $NVDA Nvidia was $92 (now $206) $RKLB Rocket Lab was $18 (now $98) $MU Micron was $72 (now $984) $SNDK Sandisk was $32 (now $1,850) $AMD AMD was $78 (now $552) Told you to buy, but you didn’t know me! Don’t w…</p><a href="https://x.com/AnessHusseinAli/status/2076009900602196078">https://x.com/AnessHusseinAli/status/2076009900602196078</a></article>
+<article class="post bull"><div><strong>@TradexWhisperer</strong> <span>mild_bullish</span> <b>weight 33,631</b></div><p>HBM was built for Artificial Intelligence. It&#x27;s not where data sits. It&#x27;s where AI thinks. Stupid analysts keep pricing it like a storage commodity cycle. You and I are the contrarians on the other side of that trade. Stay early.…</p><a href="https://x.com/TradexWhisperer/status/2076009410464550980">https://x.com/TradexWhisperer/status/2076009410464550980</a></article>
+<h4 class="bear">Bearish</h4>
+<article class="post bear"><div><strong>@antibearthesis</strong> <span>mild_bearish</span> <b>weight 160,271</b></div><p>I have seen a lot of people do dumb things in my life. FOMO’ing into $DRAM, $MU &amp;amp; $SNDK at the peak of the memory cycle could be one of the dumbest. https://t.co/ADCKm4uDy9 https://t.co/EvbbYUacbt</p><a href="https://x.com/antibearthesis/status/2076010233319600464">https://x.com/antibearthesis/status/2076010233319600464</a></article>
+<article class="post bear"><div><strong>@RJCcapital</strong> <span>mild_bearish</span> <b>weight 89,900</b></div><p>Bernstein: This Time Is Different for Memory $SNDK $MU &amp;gt; Bernstein, which maintains it $3000 price target for Sandisk, notes that legacy semiconductor LTAs offered limited downside protection: Microchip customers delayed “non-…</p><a href="https://x.com/RJCcapital/status/2076073510049321051">https://x.com/RJCcapital/status/2076073510049321051</a></article>
+<article class="post bear"><div><strong>@neilsbhatia</strong> <span>mild_bearish</span> <b>weight 6,507</b></div><p>@canadachris404 I believe we see $1150-1200 here in short order. I’m betting this way. $MU</p><a href="https://x.com/neilsbhatia/status/2076084777279431052">https://x.com/neilsbhatia/status/2076084777279431052</a></article>
+</details>
+<details class="driver"><summary>Jul 14–18 — top drivers (complete)</summary>
+<h4 class="bull">Bullish</h4>
+<article class="post bull"><div><strong>@TradexWhisperer</strong> <span>mild_bullish</span> <b>weight 123,368</b></div><p>Kimi K3 costs as much to run as GPT 5.6 Sol Max. More than GPT 5.6 Terra Max. It&#x27;s not just OpenAI and Anthropic burning through HBM anymore. Every new frontier model from every competitor adds another layer of memory demand at t…</p><a href="https://x.com/TradexWhisperer/status/2078552321974522016">https://x.com/TradexWhisperer/status/2078552321974522016</a></article>
+<article class="post bull"><div><strong>@WOLF_Financial</strong> <span>mild_bullish</span> <b>weight 88,300</b></div><p>DAN NILES SAYS MONEY IS COMING OUT OF MICRON -SK Hynix trades 20-30% cheaper than $MU and got high bandwidth memory running first -Expects money to rotate out of $MU and $SNDK now that US investors finally have a third way to pla…</p><a href="https://x.com/WOLF_Financial/status/2078612780153016637">https://x.com/WOLF_Financial/status/2078612780153016637</a></article>
+<article class="post bull"><div><strong>@MrTinvests</strong> <span>mild_bullish</span> <b>weight 78,512</b></div><p>$MU while everyone was chasing $MU at 1200 three weeks ago, i posted the 870 buy zone. today it printed 804. they panic. i buy. buying here. exactly where i said i would. this is what patience looks like. three weeks of watching.…</p><a href="https://x.com/MrTinvests/status/2078173616601248065">https://x.com/MrTinvests/status/2078173616601248065</a></article>
+<h4 class="bear">Bearish</h4>
+<article class="post bear"><div><strong>@TradexWhisperer</strong> <span>mild_bearish</span> <b>weight 66,211</b></div><p>Kimi K3: same intelligence tier, same cost tier as GPT 5.6 Sol Max. No efficiency breakthrough. No cost collapse. Just another frontier model burning the same compute and the same memory as everyone else. $MU $SKHY $DRAM https://…</p><a href="https://x.com/TradexWhisperer/status/2078558056246612013">https://x.com/TradexWhisperer/status/2078558056246612013</a></article>
+<article class="post bear"><div><strong>@_HalalTrader_</strong> <span>mild_bearish</span> <b>weight 32,036</b></div><p>$MU The current semi sector sell-off is solely due to deleveraging. It&#x27;s not the Kimi model or any FUD tied to memory efficiency or CapEx control. Once the leverage is leveled off, the market will shoot up just as fast because, r…</p><a href="https://x.com/_HalalTrader_/status/2078534868107948232">https://x.com/_HalalTrader_/status/2078534868107948232</a></article>
+<article class="post bear"><div><strong>@PatrickMoorhead</strong> <span>mild_bearish</span> <b>weight 14,521</b></div><p>Chamath said on the latest All-In on Apple: “I haven&#x27;t really seen Apple act very litigiously in 25 years in Silicon Valley, so that&#x27;s obviously a concerning data point for OpenAI.” I almost fell out of my chair. Here’s what Fabl…</p><a href="https://x.com/PatrickMoorhead/status/2078602422600229045">https://x.com/PatrickMoorhead/status/2078602422600229045</a></article>
+</details>
+<details class="driver"><summary>Jul 21–25 — top drivers (complete)</summary>
+<h4 class="bull">Bullish</h4>
+<article class="post bull"><div><strong>@firstadopter</strong> <span>mild_bullish</span> <b>weight 460,211</b></div><p>Jensen Huang tells Bloomberg that Nvidia is constrained by shortages of HBM and LPDDR memory, land, power, and construction workers. Basically, the chip maker is supply constrained versus demand. &quot;I think we have the ability as a…</p><a href="https://x.com/firstadopter/status/2081158480447098882">https://x.com/firstadopter/status/2081158480447098882</a></article>
+<article class="post bull"><div><strong>@StockSavvyShay</strong> <span>mild_bullish</span> <b>weight 330,337</b></div><p>A MESSAGE TO THE AI BEARS When AI bears look at the low multiples $SKHY, $MU, $SNDK and Samsung then the response is usually some version of “earnings multiples are meaningless for cyclical companies at peak demand and peak margi…</p><a href="https://x.com/StockSavvyShay/status/2081047650003231145">https://x.com/StockSavvyShay/status/2081047650003231145</a></article>
+<article class="post bull"><div><strong>@TradexWhisperer</strong> <span>mild_bullish</span> <b>weight 102,431</b></div><p>$SKHY $MU $DRAM 2 gigawatts. That is SK Telecom declaring itself a hyperscaler. You have no idea how bullish that is. Context on 2 GW: Enterprise data center: 10 to 50 MW Hyperscale campus: 100 to 500 MW Elite AI campuses (Micros…</p><a href="https://x.com/TradexWhisperer/status/2081083364476588292">https://x.com/TradexWhisperer/status/2081083364476588292</a></article>
+<h4 class="bear">Bearish</h4>
+<article class="post bear"><div><strong>@Megatron_ron</strong> <span>mild_bearish</span> <b>weight 109,666</b></div><p>NEW: 🇺🇸🇨🇳 Apple wants to use Chinese memory chips to lower the prices of their products, Micron the only major U.S. memory chip maker, is lobbying against, per WSJ Apple is lobbying the Trump administration to allow it to use mem…</p><a href="https://x.com/Megatron_ron/status/2081149536215396567">https://x.com/Megatron_ron/status/2081149536215396567</a></article>
+<article class="post bear"><div><strong>@babyfolio</strong> <span>mild_bearish</span> <b>weight 47,021</b></div><p>The same people who were chasing stocks at the top are now suddenly bearish after a pullback. If you thought buying then made sense, explain why buying now doesn&#x27;t. The risk/reward is way more attractive today than it was at the …</p><a href="https://x.com/babyfolio/status/2081043293681438742">https://x.com/babyfolio/status/2081043293681438742</a></article>
+<article class="post bear"><div><strong>@Megatron_ron</strong> <span>mild_bearish</span> <b>weight 14,720</b></div><p>NEW: 🇺🇸🇨🇳 Apple wants to use Chinese memory chips to lower the prices of their products, Macron the only major U.S. memory chip maker, is lobbying against, per WSJ Apple is lobbying the Trump administration to allow it to use mem…</p><a href="https://x.com/Megatron_ron/status/2081146861004402964">https://x.com/Megatron_ron/status/2081146861004402964</a></article>
+</details>
+<details class="driver"><summary>Jul 28–Aug 1 — top drivers (complete)</summary>
+<h4 class="bull">Bullish</h4>
+<article class="post bull"><div><strong>@The_AI_Investor</strong> <span>mild_bullish</span> <b>weight 77,898</b></div><p>Past Week, Roundhill sold 3M Shares of Samsung to Buy CXMT for DRAM Monday - Wednesday, Roundhill sold about 1M shares of Samsung each day. Tuesday and Wednesday, they purchased 65M of the new Chinese publicly traded memory maker…</p><a href="https://x.com/The_AI_Investor/status/2083680780925157549">https://x.com/The_AI_Investor/status/2083680780925157549</a></article>
+<article class="post bull"><div><strong>@TradexWhisperer</strong> <span>mild_bullish</span> <b>weight 43,484</b></div><p>$MU $SKHY Microsoft is showing measurable evidence of returns on capex. Bullish. $MSFT Azure and other cloud services: +43% (accelerated from prior quarter; Azure annual revenue exceeded $100 billion for the first time in FY26) O…</p><a href="https://x.com/TradexWhisperer/status/2083610381923361087">https://x.com/TradexWhisperer/status/2083610381923361087</a></article>
+<article class="post bull"><div><strong>@Ric_RTP</strong> <span>mild_bullish</span> <b>weight 39,997</b></div><p>The man who wrote the essay that started the entire AI boom just got DESTROYED by it. Goldman Sachs, JPMorgan, and Bank of America teamed up to liquidate their own client overnight. Leopold Aschenbrenner left OpenAI in 2024 and p…</p><a href="https://x.com/Ric_RTP/status/2083680591040688525">https://x.com/Ric_RTP/status/2083680591040688525</a></article>
+<h4 class="bear">Bearish</h4>
+<article class="post bear"><div><strong>@itsjcmerlo</strong> <span>mild_bearish</span> <b>weight 19,714</b></div><p>$MU path to 1k or 600 by Friday $1,000 by Friday Aug 7 is +21.5% in five sessions July went 1,154 to 823.03 = -28.7%with a lower-high sequence of 1,255 → 1,011 → 990 → 931. That said, here is the strongest honest case 1. The move…</p><a href="https://x.com/itsjcmerlo/status/2083660887685263782">https://x.com/itsjcmerlo/status/2083660887685263782</a></article>
+<article class="post bear"><div><strong>@itsjcmerlo</strong> <span>mild_bearish</span> <b>weight 19,191</b></div><p>At its core, my thesis is simple for this week $SNDK $MU After Griffin revealed his naughty tricks memory stocks ripped like 30%+ The next day was end of month.. on a Friday which at a high level = - large funds repositioning / p…</p><a href="https://x.com/itsjcmerlo/status/2083672693350543484">https://x.com/itsjcmerlo/status/2083672693350543484</a></article>
+<article class="post bear"><div><strong>@intelfabs</strong> <span>mild_bearish</span> <b>weight 14,447</b></div><p>512Gb NAND spot has started to roll over from the peak DRAM has not The interesting part of these charts is the divergence $MU $SKHY https://t.co/d69Y1Rn7lE</p><a href="https://x.com/intelfabs/status/2083517261915316271">https://x.com/intelfabs/status/2083517261915316271</a></article>
+</details>
+<details class="driver"><summary>Aug 4–8 — top drivers (complete)</summary>
+<h4 class="bull">Bullish</h4>
+<article class="post bull"><div><strong>@The_AI_Investor</strong> <span>bullish</span> <b>weight 124,002</b></div><p>A brief history of Citi analyst Atif Malik’s Micron price targets over the past year: Sep 2025: $150 → $175 🟢 — stronger DRAM cycle + AI demand Late 2025: → $240 🟢 — improving DRAM/HBM outlook Mar 2026: $385 → $430 🟢 — surging me…</p><a href="https://x.com/The_AI_Investor/status/2085995112622960827">https://x.com/The_AI_Investor/status/2085995112622960827</a></article>
+<article class="post bull"><div><strong>@BillBrooklyn10</strong> <span>mild_bullish</span> <b>weight 49,235</b></div><p>A month ago, I gave you: $AXTI is up 129.66% after my warning at $38.57 $MSFT is up 32.90% after my warning at $376.21 $NET is up 24.35% after my warning at $241.48 Next, I am warning,Believe it or not: $SKHY will be over $200 by…</p><a href="https://x.com/BillBrooklyn10/status/2086170847669293474">https://x.com/BillBrooklyn10/status/2086170847669293474</a></article>
+<article class="post bull"><div><strong>@ren_stocks</strong> <span>mild_bullish</span> <b>weight 29,504</b></div><p>$SNDK $MU $SKHY From J.P. Morgan Margin plateaus, sales keep climbing. Operating profit keeps growing even with flat OPM. Exactly my point. Bullish, just not crazy 1000%-in-a-year bullish. Send the Q flying, mfs ⚡ https://t.co/l6…</p><a href="https://x.com/ren_stocks/status/2086177224940564928">https://x.com/ren_stocks/status/2086177224940564928</a></article>
+<h4 class="bear">Bearish</h4>
+<article class="post bear"><div><strong>@optionscjp</strong> <span>mild_bearish</span> <b>weight 125,807</b></div><p>Memory stocks probably going to open down 5-10% Monday if the sentiment sticks $MU $SNDK $SKHY https://t.co/llr9GBRiyw</p><a href="https://x.com/optionscjp/status/2086174583682650526">https://x.com/optionscjp/status/2086174583682650526</a></article>
+<article class="post bear"><div><strong>@ParadisLabs</strong> <span>mild_bearish</span> <b>weight 61,323</b></div><p>I personally find it very convenient how sell-side firms like Citi and various Korean brokerages have cut their memory price targets after the recent 30-50% sell-off. They&#x27;ve dropped their multiples to match the share price movem…</p><a href="https://x.com/ParadisLabs/status/2086236849161347093">https://x.com/ParadisLabs/status/2086236849161347093</a></article>
+<article class="post bear"><div><strong>@TehLamboX</strong> <span>mild_bearish</span> <b>weight 6,484</b></div><p>🚨 Citi cut its price target on $MU Micron from $1,400 to $1,150, while maintaining a Buy rating. The bank cited a more cautious outlook for DRAM and NAND pricing heading into next year. It also lowered its valuation multiple from…</p><a href="https://x.com/TehLamboX/status/2086070243676586433">https://x.com/TehLamboX/status/2086070243676586433</a></article>
+</details></section>
+    <section class="panel"><h3>Optical drivers</h3><details class="driver"><summary>Jul 7–11 — top drivers (complete)</summary>
+<h4 class="bull">Bullish</h4>
+<article class="post bull"><div><strong>@athuinvests</strong> <span>bullish</span> <b>weight 54,785</b></div><p>AI Interconnect for Data Centers (Watchlist) Breakdown of companies worth researching that could be great buying opportunities for the long-term: 1. Lasers &amp;amp; modules: $SIVE, $COHR, $LITE, $AAOI 2. Analog chips: $SMTC 3. Conne…</p><a href="https://x.com/athuinvests/status/2075994554378207695">https://x.com/athuinvests/status/2075994554378207695</a></article>
+<article class="post bull"><div><strong>@StonkValue</strong> <span>mild_bullish</span> <b>weight 32,240</b></div><p>Don&#x27;t trade these growth stocks at all! 1. $ONDS | Aerial and Ground Defense Leaders 2. $IREN | AI Data Center Infrastructure Leader 3. $NBIS | Full-Stack AI Cloud Leader 4. $AAOI | AI Optical Networking Leader 5. $ALAB | AI Conn…</p><a href="https://x.com/StonkValue/status/2076038334875685284">https://x.com/StonkValue/status/2076038334875685284</a></article>
+<article class="post bull"><div><strong>@pequityresearch</strong> <span>mild_bullish</span> <b>weight 28,752</b></div><p>BofA: Soitec &amp;gt; Upside Already Priced In: BofA believes Soitec&#x27;s Photonics-related upside is fully valued by the market. Consensus expectations imply a high growth rate that already prices in acceleration from Near/Co-Packaged …</p><a href="https://x.com/pequityresearch/status/2076074218890956979">https://x.com/pequityresearch/status/2076074218890956979</a></article>
+<h4 class="bear">Bearish</h4>
+<article class="post bear"><div><strong>@Gubloinvestor</strong> <span>mild_bearish</span> <b>weight 14,619</b></div><p>Some of the multibaggers i sold early. $AXTI at $1.50 $ASYS at $5 $NVTS $4 $CMPS $5 Who knew they will do so well in short time. Now i am counting on $DARE and $SKYX and will find another gems in correction.</p><a href="https://x.com/Gubloinvestor/status/2075753831955144752">https://x.com/Gubloinvestor/status/2075753831955144752</a></article>
+<article class="post bear"><div><strong>@iamsohot2020</strong> <span>bearish</span> <b>weight 7,115</b></div><p>$AXTI - daily sell signal. Tested EMA 200 times. Weak - likely fall thru —- $WYFI - sell signal. Losing steam. daily - Tested 39.2 level 5 times and cannot break out. Why? Smart Money parking their sell order right there. Bearish…</p><a href="https://x.com/iamsohot2020/status/2075710926049718550">https://x.com/iamsohot2020/status/2075710926049718550</a></article>
+<article class="post bear"><div><strong>@TheValueist</strong> <span>mild_bearish</span> <b>weight 6,616</b></div><p>$NVDA $MU $SNDK $LITE This is a great distinction. Single-user SaaS vs. multi-user enterprise SaaS deployments. I agree. Single-user is at much greater risk of disintermediation by GAI. https://t.co/TnzjOqqPi7</p><a href="https://x.com/TheValueist/status/2075947000130838930">https://x.com/TheValueist/status/2075947000130838930</a></article>
+</details>
+<details class="driver"><summary>Jul 14–18 — top drivers (complete)</summary>
+<h4 class="bull">Bullish</h4>
+<article class="post bull"><div><strong>@StockSavvyShay</strong> <span>mild_bullish</span> <b>weight 230,241</b></div><p>UPDATED FIB LEVELS FOR POPULAR STOCKS AI Utilities • $IREN $31 • $NBIS $160 • $CIFR $17 • $CRWV $67 AI Power • $EOSE $3 • $BE $192 • $NVTS $8 • $VRT $245 AI Connectivity • $AVGO $368 • $ALAB $251 • $CRDO $183 • $MRVL $168 AI Hard…</p><a href="https://x.com/StockSavvyShay/status/2078477442138943916">https://x.com/StockSavvyShay/status/2078477442138943916</a></article>
+<article class="post bull"><div><strong>@HEMemarian</strong> <span>mild_bullish</span> <b>weight 54,835</b></div><p>Geran-4 &quot;Seeker&quot; features an electro-optical terminal guidance system that combines AI-powered machine vision, a secure video/data link, and Human-in-the-Loop targeting. It enables real-time target selection, autonomous terminal …</p><a href="https://x.com/HEMemarian/status/2078506793731285349">https://x.com/HEMemarian/status/2078506793731285349</a></article>
+<article class="post bull"><div><strong>@crux_capital_</strong> <span>mild_bullish</span> <b>weight 36,404</b></div><p>Now let&#x27;s look at $LITE Market cap: ~$57B Next-quarter guide: ~$985M (+21.8% QoQ, +104.9% YoY) Next-12M revenue: $4.6–5.0B, 85–100% growth Exit margins: 48–50% gross, 37–40% operating Lite site at some of the most constrained lay…</p><a href="https://x.com/crux_capital_/status/2078325890069496311">https://x.com/crux_capital_/status/2078325890069496311</a></article>
+<h4 class="bear">Bearish</h4>
+<article class="post bear"><div><strong>@InvestingVisual</strong> <span>mild_bearish</span> <b>weight 43,447</b></div><p>Many photonics names are down 30-50% from their highs. A great time to revisit the value chain and best positioned businesses: Layer 1: Materials &amp;amp; wafers • $GLW • $AXTI • $IQE • $AIXA • $AMS Layer 2: Core photonic devices • …</p><a href="https://x.com/InvestingVisual/status/2078162354953424933">https://x.com/InvestingVisual/status/2078162354953424933</a></article>
+<article class="post bear"><div><strong>@RosannaInvests</strong> <span>mild_bearish</span> <b>weight 14,857</b></div><p>📉📈 The strangest six weeks I&#x27;ve tracked in a while. The prices went one direction. The filings went the other. $EOSE → stock red YTD. Record revenue, record $807M backlog, collections above revenue, Pentagon added to the customer…</p><a href="https://x.com/RosannaInvests/status/2078536276341375107">https://x.com/RosannaInvests/status/2078536276341375107</a></article>
+<article class="post bear"><div><strong>@TheValueist</strong> <span>mild_bearish</span> <b>weight 6,529</b></div><p>$NVDA $MU $SNDK $LITE If you want to be cynical (maybe it is not even being cynical) certain insiders have known about the US’s coming increase in military activity in Iran. They started selling out driving the momentum/GAI unwin…</p><a href="https://x.com/TheValueist/status/2078487716451295362">https://x.com/TheValueist/status/2078487716451295362</a></article>
+</details>
+<details class="driver"><summary>Jul 21–25 — top drivers (complete)</summary>
+<h4 class="bull">Bullish</h4>
+<article class="post bull"><div><strong>@StockSavvyShay</strong> <span>mild_bullish</span> <b>weight 330,337</b></div><p>A MESSAGE TO THE AI BEARS When AI bears look at the low multiples $SKHY, $MU, $SNDK and Samsung then the response is usually some version of “earnings multiples are meaningless for cyclical companies at peak demand and peak margi…</p><a href="https://x.com/StockSavvyShay/status/2081047650003231145">https://x.com/StockSavvyShay/status/2081047650003231145</a></article>
+<article class="post bull"><div><strong>@EchoAnalysis</strong> <span>mild_bullish</span> <b>weight 63,994</b></div><p>$AAOI Here&#x27;s the plan 👀 I suspect price has completed Wave A here so a buy does make sense with 63% upside to Wave B. Personally I&#x27;m staying patient for Wave C to finish at $50 where I&#x27;ll buy heavy. Wave 3 target: 749% 🚀 https://…</p><a href="https://x.com/EchoAnalysis/status/2081107720145375737">https://x.com/EchoAnalysis/status/2081107720145375737</a></article>
+<article class="post bull"><div><strong>@KeorUnreal</strong> <span>mild_bullish</span> <b>weight 35,873</b></div><p>Let’s jump inside the pool💦Who wants to join?😏 Dua Lipa, Ester Esposito, Ana de Armas👙 👉🏻Subscribe for more content⚡️ Nano Banana Pro via Hailuo AI Prompt: An authentic 8k RAW night portrait photography in a 9:16 aspect ratio, ca…</p><a href="https://x.com/KeorUnreal/status/2081018320136921523">https://x.com/KeorUnreal/status/2081018320136921523</a></article>
+<h4 class="bear">Bearish</h4>
+<article class="post bear"><div><strong>@HeidingOut</strong> <span>mild_bearish</span> <b>weight 52,346</b></div><p>Short video for you guys about the short position I took in $AAOI back in June at $197; ended up being a 54% ROI in shares alone (I have puts) and I&#x27;m not really known for my great short positions. As most of you know I&#x27;ve been i…</p><a href="https://x.com/HeidingOut/status/2081163451028705570">https://x.com/HeidingOut/status/2081163451028705570</a></article>
+<article class="post bear"><div><strong>@EhrmantrautCap_</strong> <span>mild_bearish</span> <b>weight 12,403</b></div><p>My price targets for EOY: $KRKNF -&amp;gt; $12 $ASTS -&amp;gt; $160 $MU -&amp;gt; $1,200 $SNDK -&amp;gt; $2,350 $KXIAY -&amp;gt; JPY 140,000 $SKHY -&amp;gt; KRW 3,800,000 $AMPG -&amp;gt; $12 $AAOI -&amp;gt; $280 $EQR.AX -&amp;gt; 0.75 AUD Forget about the short-ter…</p><a href="https://x.com/EhrmantrautCap_/status/2081037502920495241">https://x.com/EhrmantrautCap_/status/2081037502920495241</a></article>
+<article class="post bear"><div><strong>@MilkRoadStocks</strong> <span>mild_bearish</span> <b>weight 10,394</b></div><p>How does $MRVL rank vs Neoclouds and memory? How Melvin ranks the three sectors he&#x27;s covered recently from safest to riskiest over a 36 month horizon: - Neoclouds (safest) - Memory (second) - Photonics (highest risk, highest rewa…</p><a href="https://x.com/MilkRoadStocks/status/2081031795110478117">https://x.com/MilkRoadStocks/status/2081031795110478117</a></article>
+</details>
+<details class="driver"><summary>Jul 28–Aug 1 — top drivers (partial)</summary>
+<h4 class="bull">Bullish</h4>
+<article class="post bull"><div><strong>@ParadisLabs</strong> <span>mild_bullish</span> <b>weight 162,444</b></div><p>Notes on $AAOI ahead of Q2 earnings next week: For the TLDR thesis: $AAOI is the only Western vertically integrated transceiver maker with its own InP laser fab pointed directly at the 800G/1.6T ramp. Currently undergoing capacit…</p><a href="https://x.com/ParadisLabs/status/2083634757234287069">https://x.com/ParadisLabs/status/2083634757234287069</a></article>
+<article class="post bull"><div><strong>@statementdog</strong> <span>mild_bullish</span> <b>weight 95,587</b></div><p>AI data centers are running short of lasers, the ones that move data between servers over fiber. $LITE is sold out through 2027. $COHR says the shortage is capping its data center growth. Lite-On (2301 TT), one of the main power …</p><a href="https://x.com/statementdog/status/2083470289678250444">https://x.com/statementdog/status/2083470289678250444</a></article>
+<article class="post bull"><div><strong>@burak_finance</strong> <span>mild_bullish</span> <b>weight 68,236</b></div><p>WALL STREET’S MOST BULLISH PRICE TARGETS FOR POPULAR STOCKS AI Utilities • $IREN $105 (+184%) • $NBIS $410 (+116%) • $HUT $263 (+139%) • $CORZ $55 (+139%) • $CRWV $167 (+132%) Photonics • $AAOI $220 (+120%) • $LITE $1,300 (+70%) …</p><a href="https://x.com/burak_finance/status/2083508289208209618">https://x.com/burak_finance/status/2083508289208209618</a></article>
+<h4 class="bear">Bearish</h4>
+<article class="post bear"><div><strong>@WealthCoachMak</strong> <span>mild_bearish</span> <b>weight 9,195</b></div><p>Main options account went up this week by $61,460 Closed profits from Options/stock Trading: $32,836 🔥💰 Mostly due to $NVDA covered calls and capital gains and Short Puts for $AMD $MU $NVDA $AMZN $AAOI $CRWD $GOOGL $CRWV and Long…</p><a href="https://x.com/WealthCoachMak/status/2083625508680392784">https://x.com/WealthCoachMak/status/2083625508680392784</a></article>
+<article class="post bear"><div><strong>@A_Najumi</strong> <span>mild_bearish</span> <b>weight 3,889</b></div><p>My favorite flows from Friday, short list but we have some good names. Contract with total premiums listed below $COHR 240P 8/14/2026 $3.6M $CRWV 80C 9/18/2026 $6.2M $KORU 20C 9/18/2026 $2.2M $GOOG 375C 8/28/2026 $3.1M $SPY $QQQ …</p><a href="https://x.com/A_Najumi/status/2083655002317373844">https://x.com/A_Najumi/status/2083655002317373844</a></article>
+<article class="post bear"><div><strong>@Marlin_Capital</strong> <span>mild_bearish</span> <b>weight 3,743</b></div><p>Despite a historic Momentum crash in July… Momentum crowding is STILL in the 93rd %ile versus history. 🤯 $MTUM $DRAM $SNDK $AAOI https://t.co/5AosFm6SRi</p><a href="https://x.com/Marlin_Capital/status/2083669340906205344">https://x.com/Marlin_Capital/status/2083669340906205344</a></article>
+</details></section>
+  </div>
+
+  <h2>Caveats and next steps</h2>
+  <section class="panel">
+    <ul>
+      <li>X API credits depleted before optical window 5; do not infer an optical collapse from the missing row.</li>
+      <li>Historical metrics are probably matured/current impressions and engagements, not point-in-time values.</li>
+      <li>Classification is deterministic/rule-based and needs manual or LLM-assisted validation before serious use.</li>
+      <li>Forward excess-return validation needs a usable price-data source for these 2026 windows.</li>
+      <li>Best next step: resolve X credits and rerun optical windows 4–5, or start forward daily snapshots to avoid point-in-time leakage.</li>
+    </ul>
+  </section>
+
+  <h2>Provenance</h2>
+  <section class="panel provenance">
+    <p><strong>Source project:</strong> <code>/Users/rayai/.openclaw/workspace/projects/weighted-sentiment-signals</code></p>
+    <p><strong>Run directory:</strong> <code>/Users/rayai/.openclaw/workspace/projects/weighted-sentiment-signals/data/runs/lookback-2026-07-07-to-2026-08-08</code></p>
+    <p><strong>Summary JSON:</strong> <code>/Users/rayai/.openclaw/workspace/projects/weighted-sentiment-signals/data/runs/lookback-2026-07-07-to-2026-08-08/summary.json</code></p>
+    <p><strong>Data quality JSON:</strong> <code>/Users/rayai/.openclaw/workspace/projects/weighted-sentiment-signals/data/runs/lookback-2026-07-07-to-2026-08-08/data_quality.json</code></p>
+    <p><strong>Generated file:</strong> <code>/Users/rayai/.openclaw/workspace/projects/weighted-sentiment-signals/reports/historical-lookback-dashboard-2026-08-09.html</code></p>
+    <p><strong>Generated at:</strong> 2026-08-09T16:26:58</p>
+  </section>
+</div>
+</body>
+</html>
+
+    </main>
+
+    <footer class="norfolk-footer">
+        <p>© 2026 Norfolk AI Labs • Generated by <a href="https://github.com/openclaw/openclaw">Atlas</a> • <a href="https://github.com/norfolkailabs/share-pages">Source</a></p>
+    </footer>
+</body>
+</html>
